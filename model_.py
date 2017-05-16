@@ -8,50 +8,6 @@ from architecture import *
 from utils import *
 
 class cycleGAN():
-    # def __init__(self,
-    #              sess,
-    #              input_width_x, input_height_x,
-    #              input_width_y, input_height_y,
-    #              channel, lambda_val,
-    #              batch_size, sample_size,
-    #              learning_rate, momentum,
-    #              resnet_size,
-    #              logpoint, checkpoint,
-    #              model, images):
-    #     self.sess = sess
-
-    #     self.input_width_x = input_width_x
-    #     self.input_height_x = input_height_x
-    #     self.input_width_y = input_width_y
-    #     self.input_height_y = input_height_y
-    #     self.channel = channel
-    #     self.df_dim = 64
-    #     self.batch_size = batch_size
-    #     self.sample_size = sample_size
-
-    #     self.lambda_val = lambda_val
-    #     self.learning_rate = learning_rate
-    #     self.momentum = momentum
-
-    #     self.resnet_size = resnet_size
-
-    #     self.logpoint = logpoint
-    #     self.model_path = checkpoint + "/" + model + "/"
-
-    #     self.images_path = checkpoint + "/" + images + "/"
-
-    #     if self.channel == 1:
-    #         self.is_gray=True
-    #     else:
-    #         self.is_gray=False
-
-    #     self.input_dim_x = [self.input_height_x, self.input_width_x, self.channel]
-    #     self.input_dim_y = [self.input_height_y, self.input_width_y, self.channel]
-
-    #     self.debug = 0
-
-    #     self.build_model()
-    #     self.build_losses()
     def __init__(self,sess,args):
         self.sess = sess
 
@@ -120,40 +76,19 @@ class cycleGAN():
 
         self.d_sum_y = tf.summary.histogram("d_y", self.D_y)
         self.d_sum_y_ = tf.summary.histogram("d_y_", self.D_y_)
-        #self.images_G = tf.summary.merge([tf.summary.image("x", images_x),
-        #                                  tf.summary.image("G_xy", self.G_xy),
-        #                                  tf.summary.image("G_xyx", self.G_xyx)])
 
         self.images_x = tf.concat(0,[images_x, self.G_xy, self.G_xyx])
-	self.images_x_sum =tf.summary.image("x", self.images_x, max_outputs=3)
-        #self.orig_img_x = tf.summary.image("x", images_x, max_outputs=3)
-        #self.G_sum_xy = tf.summary.image("x", self.G_xy, max_outputs=3)
-        #self.G_sum_xyx = tf.summary.image("x", self.G_xyx, max_outputs=3)
+        self.images_x_sum =tf.summary.image("x", self.images_x, max_outputs=3)
 
         self.d_sum_x = tf.summary.histogram("d_x", self.D_x)
         self.d_sum_x_ = tf.summary.histogram("d_x_", self.D_x_)
-        #self.images_D = tf.summary.merge([tf.summary.image("y", images_y),
-        #                                  tf.summary.image("G_yx", self.G_yx),
-        #                                  tf.summary.image("G_yxy", self.G_yxy)])
 
-	self.images_y = tf.concat(0,[images_y, self.G_yx, self.G_yxy])
-	self.images_y_sum = tf.summary.image("y", self.images_y, max_outputs=3)
-        #self.orig_img_y = tf.summary.image("y", images_y, max_outputs=3)
-        #self.G_sum_yx = tf.summary.image("y", self.G_yx, max_outputs=3)
-        #self.G_sum_yxy = tf.summary.image("y", self.G_yxy, max_outputs=3)
-        # self.G_sum_yx = tf.summary.image("G_yx", self.G_yx)
-
+        self.images_y = tf.concat(0,[images_y, self.G_yx, self.G_yxy])
+        self.images_y_sum = tf.summary.image("y", self.images_y, max_outputs=3)
+ 
         if self.debug:
             self.g_loss_y = tf.Print(self.g_loss_y, [self.G_xy], "G_xy : ", summarize=10)
-            # self.g_loss_y = tf.Print(self.g_loss_y, [tf.nn.sparse_softmax_cross_entropy_with_logits(
-            #                                 logits=self.D_y_logits_, labels=ones_label(self.D_y_)
-            #                               )], "sparse_softmax_cross_entropy_with_logits\n")
-
-            # self.d_loss_y = tf.Print(self.d_loss_y, [self.d_loss_real_y], message="\nmse_real : \n")
-            # self.d_loss_y = tf.Print(self.d_loss_y, [self.d_loss_fake_y], message="\nmse_fake : \n")
-            # self.d_loss_y = tf.Print(self.d_loss_y, [self.d_loss_y], message="\nmse_loss : \n")
-            # self.d_loss_y = tf.Print(self.d_loss_y, [self.D_y_logits_], message="\n\nD_y_logits_ : \n")
-
+ 
         #gets all the variables initialized with trainable set to True
         trainable_vars = tf.trainable_variables()
 
@@ -221,11 +156,7 @@ class cycleGAN():
         #make optimizers
         D_optimizer_x = tf.train.AdamOptimizer(self.learning_rate, beta1=self.momentum, name='Adam_Dx').minimize(self.d_loss_x, var_list=self.D_vars_x)
         D_optimizer_y = tf.train.AdamOptimizer(self.learning_rate, beta1=self.momentum, name='Adam_Dy').minimize(self.d_loss_y, var_list=self.D_vars_y)
-        # D_optimizer = tf.train.AdamOptimizer(self.learning_rate, beta1=self.momentum, name='Adam_Dx').minimize(self.d_loss_y, var_list=self.D_vars_all)
-
-        # G_optimizer_xy = tf.train.AdamOptimizer(self.learning_rate, beta1=self.momentum, name='Adam_Gx').minimize(self.g_loss_x, var_list=self.Gx_vars)
-        # G_optimizer_yx = tf.train.AdamOptimizer(self.learning_rate, beta1=self.momentum, name='Adam_Gy').minimize(self.g_loss_y, var_list=self.Gy_vars)
-        G_optimizer = tf.train.AdamOptimizer(self.learning_rate, beta1=self.momentum, name='Adam_Gx').minimize(self.g_loss, var_list=self.G_vars_all)
+        G_optimizer = tf.train.AdamOptimizer(self.learning_rate, beta1=self.momentum, name='Adam_G').minimize(self.g_loss, var_list=self.G_vars_all)
 
         try:
             tf.global_variables_initializer().run()
@@ -234,8 +165,7 @@ class cycleGAN():
 
         image_paths_A = glob(os.path.join(args.data_path, args.trainsetA, args.image_type))
         image_paths_B = glob(os.path.join(args.data_path, args.trainsetB, args.image_type))
-        # joint_file = read_joints(os.path.join(args.data_path, args.joint_path))
-
+        
         #prepare sample images
         sample_filesA = image_paths_A[0:self.sample_size]
         sample_filesB = image_paths_B[0:self.sample_size]
@@ -379,18 +309,14 @@ class cycleGAN():
             n_layers = 3
             layers = []
 
-            # 2x [batch, height, width, in_channels] => [batch, height, width, in_channels * 2]
-            # input = tf.concat([images, self.input_dim_y], 3)
             kw = 4
             padw = int(np.ceil((kw-1)/2))
-            # layer_1: [batch, 256, 256, in_channels * 2] => [batch, 128, 128, ndf]
-            # with tf.variable_scope("layer_1"):
+
             convolved = conv2d_(images, self.channel, self.df_dim,
                                kernel=kw, strides=2, padding=padw,
                                name="conv1")
             rectified = leaky_relu(convolved, 0.2)
             layers.append(rectified)
-
 
             nf_mult=1
             nf_mult_prev=1
@@ -417,7 +343,6 @@ class cycleGAN():
         checkpoint_path = args.log_folder + "/" + args.log_models + "/"
         meta_paths = sorted(glob(os.path.join(checkpoint_path, "*.meta")),key=os.path.getmtime)
         
-        # new_saver = tf.train.import_meta_graph(meta_paths[len(meta_paths)-1])
         new_saver = tf.train.Saver()
         new_saver.restore(self.sess, tf.train.latest_checkpoint(checkpoint_path))
         image_pathsA = sorted(glob(os.path.join(args.data_path, args.test_A, args.image_type)),key=os.path.getmtime)
@@ -437,8 +362,6 @@ class cycleGAN():
                              resize_height=self.input_height_x,
                              is_gray=self.is_gray) for file_name in image_pathsB]
 
-        # jointfile = "./hand_generator/joint_partial.txt"
-        # joints_ = open(jointfile).read().split('\n')
 
         for index,image in enumerate(batchA):
             print "generating image # %d"%index
