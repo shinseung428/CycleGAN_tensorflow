@@ -5,12 +5,12 @@ TensorFlow implementation of [CycleGAN](https://arxiv.org/pdf/1703.10593.pdf).
 Torch implementation can be found [here](https://github.com/junyanz/CycleGAN)
 PyTorch implementation can be found [here](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix)
 
-###Prerequisites  
+### Prerequisites  
 -Tensorflow  
 -numpy  
 -scipy  
 
-##Downloading datasets  
+## Downloading datasets  
 bash ./data/download_cyclegan_dataset.sh dataset_name  
 Available datasets:  
 -facades: 400 images from the CMP Facades dataset.
@@ -22,13 +22,13 @@ Available datasets:
 -monet2photo, vangogh2photo, ukiyoe2photo, cezanne2photo: The art images were downloaded from Wikiart. The real photos are downloaded from Flickr using the combination of the tags landscape and landscapephotography. The training set size of each class is Monet:1074, Cezanne:584, Van Gogh:401, Ukiyo-e:1433, Photographs:6853.
 -iphone2dslr_flower: both classes of images were downlaoded from Flickr. The training set size of each class is iPhone:1813, DSLR:3316. See more details in the paper.
 
-##Training
+## Training
 python main.py --is_train=True  
 
-##Testing
+## Testing
 python main.py --is_train=False
 
-##Results
+## Results
 
 
 ## Author
