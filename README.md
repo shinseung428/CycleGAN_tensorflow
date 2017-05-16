@@ -5,12 +5,12 @@ TensorFlow implementation of [CycleGAN](https://arxiv.org/pdf/1703.10593.pdf).
 Torch implementation can be found [here](https://github.com/junyanz/CycleGAN)
 PyTorch implementation can be found [here](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix)
 
-###Prerequisites
+###Prerequisites  
 -Tensorflow  
 -numpy  
 -scipy  
 
-##Downloading datasets
+##Downloading datasets  
 bash ./data/download_cyclegan_dataset.sh dataset_name  
 Available datasets:  
 -facades: 400 images from the CMP Facades dataset.
