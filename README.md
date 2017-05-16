@@ -11,7 +11,9 @@ PyTorch implementation can be found [here](https://github.com/junyanz/pytorch-Cy
 -scipy  
 
 ## Downloading datasets  
+'''bash
 bash ./data/download_cyclegan_dataset.sh dataset_name  
+'''
 Available datasets:  
 -facades: 400 images from the CMP Facades dataset.
 -cityscapes: 2975 images from the Cityscapes training set.
