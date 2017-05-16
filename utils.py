@@ -22,7 +22,19 @@ def save_image(image, path):
     new_img_ = np.zeros((new_img.shape[0], new_img.shape[1], 3), dtype=np.float)
     new_img_[:,:,0] = new_img_[:,:,1] = new_img_[:,:,2] = new_img[:,:,0]
 
+    # joint = joint.split(' ')
+    # print joint
+    # for j in range(0,len(joint),2):
+    #     print j
+    #     x = int(round(float(joint[j])))
+    #     y = int(round(float(joint[j+1])))
+    #     new_img_[y,x,0] = 1
+    #     new_img_[y,x,1] = -1
+    #     new_img_[y,x,2] = -1
+
     scipy.misc.imsave(path , new_img_)
+    # scipy.misc.imshow(new_img_)
+    # raw_input("Press Enter to continue...")
 
 def imread(path, is_gray=False):
     if(is_gray):
@@ -40,7 +52,6 @@ def load_image(path,
                resize_height=128, resize_width=128,
                is_gray=False):
     image = imread(path, is_gray)
-    tmp = transform(image, input_height, input_width, resize_height, resize_width)
 
     return transform(image, input_height, input_width, resize_height, resize_width)
 

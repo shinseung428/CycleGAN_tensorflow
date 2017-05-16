@@ -1,43 +1,79 @@
 import tensorflow as tf
 import numpy as np
 import os
+from PIL import Image
 from glob import glob
 
 from architecture import *
 from utils import *
 
 class cycleGAN():
-    def __init__(self,
-                 sess,
-                 input_width_x, input_height_x,
-                 input_width_y, input_height_y,
-                 channel, lambda_val,
-                 batch_size, sample_size,
-                 learning_rate, momentum,
-                 resnet_size,
-                 logpoint, checkpoint,
-                 model, images):
+    # def __init__(self,
+    #              sess,
+    #              input_width_x, input_height_x,
+    #              input_width_y, input_height_y,
+    #              channel, lambda_val,
+    #              batch_size, sample_size,
+    #              learning_rate, momentum,
+    #              resnet_size,
+    #              logpoint, checkpoint,
+    #              model, images):
+    #     self.sess = sess
+
+    #     self.input_width_x = input_width_x
+    #     self.input_height_x = input_height_x
+    #     self.input_width_y = input_width_y
+    #     self.input_height_y = input_height_y
+    #     self.channel = channel
+    #     self.df_dim = 64
+    #     self.batch_size = batch_size
+    #     self.sample_size = sample_size
+
+    #     self.lambda_val = lambda_val
+    #     self.learning_rate = learning_rate
+    #     self.momentum = momentum
+
+    #     self.resnet_size = resnet_size
+
+    #     self.logpoint = logpoint
+    #     self.model_path = checkpoint + "/" + model + "/"
+
+    #     self.images_path = checkpoint + "/" + images + "/"
+
+    #     if self.channel == 1:
+    #         self.is_gray=True
+    #     else:
+    #         self.is_gray=False
+
+    #     self.input_dim_x = [self.input_height_x, self.input_width_x, self.channel]
+    #     self.input_dim_y = [self.input_height_y, self.input_width_y, self.channel]
+
+    #     self.debug = 0
+
+    #     self.build_model()
+    #     self.build_losses()
+    def __init__(self,sess,args):
         self.sess = sess
 
-        self.input_width_x = input_width_x
-        self.input_height_x = input_height_x
-        self.input_width_y = input_width_y
-        self.input_height_y = input_height_y
-        self.channel = channel
+        self.input_width_x = args.input_width_x
+        self.input_height_x = args.input_height_x
+        self.input_width_y = args.input_width_y
+        self.input_height_y = args.input_height_y
+        self.channel = args.channel_dim
         self.df_dim = 64
-        self.batch_size = batch_size
-        self.sample_size = sample_size
+        self.batch_size = args.batch_size
+        self.sample_size = args.sample_size
 
-        self.lambda_val = lambda_val
-        self.learning_rate = learning_rate
-        self.momentum = momentum
+        self.lambda_val = args.lambda_val
+        self.learning_rate = args.learning_rate
+        self.momentum = args.momentum
 
-        self.resnet_size = resnet_size
+        self.resnet_size = args.resnet_size
 
-        self.logpoint = logpoint
-        self.model_path = checkpoint + "/" + model + "/"
+        self.logpoint = args.logpoint
+        self.model_path = args.log_folder + "/" + args.log_models + "/"
 
-        self.images_path = checkpoint + "/" + images + "/"
+        self.images_path = args.log_folder + "/" + args.log_images + "/"
 
         if self.channel == 1:
             self.is_gray=True
@@ -51,7 +87,6 @@ class cycleGAN():
 
         self.build_model()
         self.build_losses()
-
     def build_model(self):
 
         #make placholders
@@ -181,7 +216,7 @@ class cycleGAN():
 
 
     #training starts here
-    def train(self,config):
+    def train(self,args):
         saver = tf.train.Saver()
         #make optimizers
         D_optimizer_x = tf.train.AdamOptimizer(self.learning_rate, beta1=self.momentum, name='Adam_Dx').minimize(self.d_loss_x, var_list=self.D_vars_x)
@@ -197,9 +232,9 @@ class cycleGAN():
         except:
             tf.initialize_all_variables().run()
 
-        image_paths_A = glob(os.path.join(config.data_path, config.trainsetA, config.image_type))
-        image_paths_B = glob(os.path.join(config.data_path, config.trainsetB, config.image_type))
-        # joint_file = read_joints(os.path.join(config.data_path, config.joint_path))
+        image_paths_A = glob(os.path.join(args.data_path, args.trainsetA, args.image_type))
+        image_paths_B = glob(os.path.join(args.data_path, args.trainsetB, args.image_type))
+        # joint_file = read_joints(os.path.join(args.data_path, args.joint_path))
 
         #prepare sample images
         sample_filesA = image_paths_A[0:self.sample_size]
@@ -214,8 +249,6 @@ class cycleGAN():
                                      input_height=self.input_height_y,
                                      is_gray=self.is_gray
                                      ) for file_name in sample_filesB]
-
-
 
         #variables to show in Summary
         self.g_sum = tf.summary.merge([self.images_x_sum,
@@ -234,7 +267,7 @@ class cycleGAN():
         counter = 0
 
         #Training starts
-        for epoch in xrange(config.max_epochs):
+        for epoch in xrange(args.max_epochs):
             batch_indices = min(len(image_paths_A), np.inf) // self.batch_size
 
             for index in xrange(0, batch_indices):
@@ -289,7 +322,7 @@ class cycleGAN():
                     print ' Saved model'
 
                 counter += 1
-
+                input("pause")
 
     def generator(self, images, reuse=False, name="generator"):
         with tf.variable_scope(name) as scope:
@@ -319,25 +352,6 @@ class cycleGAN():
             for i in range(1,n_layers+1):
                 resnet_ = resnet(layers[-1], 256, kernel=3, strides=1, name='resnet_%d'%i,reuse=reuse)
                 layers.append(resnet_)
-
-            # resnet1
-            # res1 = resnet(conv3, 256, kernel=3, strides=1, name='resnet_1',reuse=reuse)
-            # # resnet2
-            # res2 = resnet(res1, 256, kernel=3, strides=1, name='resnet_2',reuse=reuse)
-            # # resnet3
-            # res3 = resnet(res2, 256, kernel=3, strides=1, name='resnet_3',reuse=reuse)
-            # # resnet4
-            # res4 = resnet(res3, 256, kernel=3, strides=1, name='resnet_4',reuse=reuse)
-            # # resnet5
-            # res5 = resnet(res4, 256, kernel=3, strides=1, name='resnet_5',reuse=reuse)
-            # # resnet6
-            # res6 = resnet(res5, 256, kernel=3, strides=1, name='resnet_6',reuse=reuse)
-            # # resnet7
-            # res7 = resnet(res6, 256, kernel=3, strides=1, name='resnet_7',reuse=reuse)
-            # # resnet5
-            # res8 = resnet(res7, 256, kernel=3, strides=1, name='resnet_8',reuse=reuse)
-            # # resnet6
-            # res9 = resnet(res8, 256, kernel=3, strides=1, name='resnet_9',reuse=reuse)
 
             deconv1 = tf.nn.relu(instance_norm(deconv2d(layers[-1], 256, 128,
                                                              kernel=3, strides=2,
@@ -399,14 +413,15 @@ class cycleGAN():
             return output, convolved
 
 
-    def make_data(self,config):
-        checkpoint_path = config.checkpoint + "/" + config.checkpoint_model + "/"
+    def make_data(self,args):
+        checkpoint_path = args.log_folder + "/" + args.log_models + "/"
         meta_paths = sorted(glob(os.path.join(checkpoint_path, "*.meta")),key=os.path.getmtime)
         
         # new_saver = tf.train.import_meta_graph(meta_paths[len(meta_paths)-1])
         new_saver = tf.train.Saver()
         new_saver.restore(self.sess, tf.train.latest_checkpoint(checkpoint_path))
-        image_paths = glob(os.path.join(config.data_path, config.test_A, config.image_type))
+        image_pathsA = sorted(glob(os.path.join(args.data_path, args.test_A, args.image_type)),key=os.path.getmtime)
+        image_pathsB = sorted(glob(os.path.join(args.data_path, args.test_B, args.image_type)),key=os.path.getmtime)
         print 'loaded model ', tf.train.latest_checkpoint(checkpoint_path)
 
         batchA = [load_image(file_name,
@@ -414,12 +429,33 @@ class cycleGAN():
                              input_height=self.input_height_x,
                              resize_width=self.input_width_x,
                              resize_height=self.input_height_x,
-                             is_gray=self.is_gray) for file_name in image_paths]
+                             is_gray=self.is_gray) for file_name in image_pathsA]
+        batchB = [load_image(file_name,
+                             input_width=self.input_width_x,
+                             input_height=self.input_height_x,
+                             resize_width=self.input_width_x,
+                             resize_height=self.input_height_x,
+                             is_gray=self.is_gray) for file_name in image_pathsB]
+
+        # jointfile = "./hand_generator/joint_partial.txt"
+        # joints_ = open(jointfile).read().split('\n')
 
         for index,image in enumerate(batchA):
             print "generating image # %d"%index
             image = np.expand_dims(image, axis=0)
             image = np.expand_dims(image, axis=3)
             generated_img = self.G_xy.eval({self.x_input: image})
-            test_path = os.path.join(config.data_path, config.test_path)
-            save_image(generated_img,test_path + "/fake_{:06}".format(index) + ".jpg")
+
+            imageA = np.expand_dims(batchA[index], axis=0)
+            imageA = np.expand_dims(imageA, axis=3)
+            imageB = np.expand_dims(batchB[index], axis=0)
+            imageB = np.expand_dims(imageB, axis=3)
+
+            A_test_path = os.path.join(args.data_path, args.A_path)
+            B_test_path = os.path.join(args.data_path, args.B_path)
+            fake_test_path = os.path.join(args.data_path, args.test_path)
+
+            save_image(imageA, A_test_path + "/synt_{:06}".format(index)+args.test_image_type)
+            save_image(imageB, B_test_path + "/real_{:06}".format(index)+args.test_image_type)
+            save_image(generated_img, fake_test_path + "/fake_{:06}".format(index)+args.test_image_type)
+            input("pause")
