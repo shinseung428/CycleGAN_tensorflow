@@ -17,7 +17,8 @@ parser.add_argument('--batch_size', dest='batch_size', default=1, help='batch si
 parser.add_argument('--sample_size', dest='sample_size', default=64, help='sample size')
 parser.add_argument('--channel_dim', dest='channel_dim', default=1, help='channel dimension')
 
-parser.add_argument('--data_path', dest='data_path', default='./data', help='training datapath')
+parser.add_argument('--data_path', dest='data_path', default='./dataset', help='training datapath')
+parser.add_argument('--data', dest='data', default='apple2orange', help='data')
 parser.add_argument('--trainsetA', dest='trainsetA', default='trainA', help='A training folder name')
 parser.add_argument('--trainsetB', dest='trainsetB', default='trainB', help='B training folder name')
 parser.add_argument('--image_type', dest='image_type', default='*png', help='training image data type')

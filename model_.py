@@ -163,8 +163,8 @@ class cycleGAN():
         except:
             tf.initialize_all_variables().run()
 
-        image_paths_A = glob(os.path.join(args.data_path, args.trainsetA, args.image_type))
-        image_paths_B = glob(os.path.join(args.data_path, args.trainsetB, args.image_type))
+        image_paths_A = glob(os.path.join(args.data_path, args.data, args.trainsetA, args.image_type))
+        image_paths_B = glob(os.path.join(args.data_path, args.data, args.trainsetB, args.image_type))
         
         #prepare sample images
         sample_filesA = image_paths_A[0:self.sample_size]

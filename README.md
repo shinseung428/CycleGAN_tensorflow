@@ -12,7 +12,7 @@ PyTorch implementation can be found [here](https://github.com/junyanz/pytorch-Cy
 
 ## Downloading datasets  
 ```bash
-bash ./data/download_cyclegan_dataset.sh dataset_name  
+bash ./datasets/download_cyclegan_dataset.sh dataset_name  
 ```
 Available datasets:  
 * __facades__ : 400 images from the CMP Facades dataset.
@@ -26,14 +26,25 @@ Available datasets:
 
 ## Training
 ```bash
-python main.py --is_train=True  
+python main.py --is_train=True --data=apple2orange
 ```
+
+Before training the model, check the folder path to make sure data are fetched correctly.  
+
 ## Testing
 ```bash
-python main.py --is_train=False
+python main.py --is_train=False --data=apple2orange
 ```
-## Results
 
+Running this code generates images in 4 folders.  
+(These folders must be created before running the code)  
+__res_A__ folder contains original test images from domain A  
+__res_B__ folder contains original test images from domain B  
+__fake_A__ folder contains fake images generated from domain B  
+__fake_B__ folder contains fake images generated from domain A  
+
+## Results  
+Coming soon..
 
 ## Author
 
