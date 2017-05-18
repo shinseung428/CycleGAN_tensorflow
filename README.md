@@ -40,6 +40,14 @@ Running this code generates images in 2 folders.
 __fake_A__ folder contains fake images generated from domain B  
 __fake_B__ folder contains fake images generated from domain A  
 
+## Tensorboard  
+```bash
+tensorboard --logdir=./graphs
+```
+
+Default port set to 6006.  
+This will enable you to visualize training details.  
+
 ## Results  
 Coming soon..
 
