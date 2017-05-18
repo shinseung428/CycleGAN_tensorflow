@@ -26,6 +26,8 @@ class cycleGAN():
 
         self.resnet_size = args.resnet_size
 
+        self.graph_path = args.graphs
+
         self.logpoint = args.logpoint
         self.model_path = args.log_folder + "/" + args.log_models + "/"
 
@@ -193,7 +195,7 @@ class cycleGAN():
                                        self.d_sum_x_,
                                        self.d_loss_x_sum])
 
-        writer = tf.summary.FileWriter('./graphs', self.sess.graph)
+        writer = tf.summary.FileWriter(self.graph_path, self.sess.graph)
         counter = 0
 
         #Training starts
@@ -345,8 +347,8 @@ class cycleGAN():
         
         new_saver = tf.train.Saver()
         new_saver.restore(self.sess, tf.train.latest_checkpoint(checkpoint_path))
-        image_pathsA = sorted(glob(os.path.join(args.data_path, args.test_A, args.image_type)),key=os.path.getmtime)
-        image_pathsB = sorted(glob(os.path.join(args.data_path, args.test_B, args.image_type)),key=os.path.getmtime)
+        image_pathsA = sorted(glob(os.path.join(args.data_path, args.data, args.test_A, args.image_type)),key=os.path.getmtime)
+        image_pathsB = sorted(glob(os.path.join(args.data_path, args.data, args.test_B, args.image_type)),key=os.path.getmtime)
         print 'loaded model ', tf.train.latest_checkpoint(checkpoint_path)
 
         batchA = [load_image(file_name,
@@ -363,21 +365,44 @@ class cycleGAN():
                              is_gray=self.is_gray) for file_name in image_pathsB]
 
 
-        for index,image in enumerate(batchA):
+        for index,image_x in enumerate(batchA):
             print "generating image # %d"%index
-            image = np.expand_dims(image, axis=0)
-            image = np.expand_dims(image, axis=3)
-            generated_img = self.G_xy.eval({self.x_input: image})
+            image_x = np.expand_dims(image_x, axis=0)
+            image_x = np.expand_dims(image_x, axis=3)
 
-            imageA = np.expand_dims(batchA[index], axis=0)
-            imageA = np.expand_dims(imageA, axis=3)
-            imageB = np.expand_dims(batchB[index], axis=0)
-            imageB = np.expand_dims(imageB, axis=3)
+            image_y = batchB[index]
+            image_y = np.expand_dims(image_y, axis=0)
+            image_y = np.expand_dims(image_y, axis=3)
 
-            A_test_path = os.path.join(args.data_path, args.A_path)
-            B_test_path = os.path.join(args.data_path, args.B_path)
-            fake_test_path = os.path.join(args.data_path, args.test_path)
+            generated_img_B = self.G_xy.eval({self.x_input: image_x})
+            generated_img_A = self.G_yx.eval({self.y_input: image_y})
 
-            save_image(imageA, A_test_path + "/synt_{:06}".format(index)+args.test_image_type)
-            save_image(imageB, B_test_path + "/real_{:06}".format(index)+args.test_image_type)
-            save_image(generated_img, fake_test_path + "/fake_{:06}".format(index)+args.test_image_type)
+            # imageA = np.expand_dims(batchA[index], axis=0)
+            # imageA = np.expand_dims(imageA, axis=3)
+            # imageB = np.expand_dims(batchB[index], axis=0)
+            # imageB = np.expand_dims(imageB, axis=3)
+
+            # A_test_path = os.path.join(args.data_path, args.data, args.A_path)
+            # B_test_path = os.path.join(args.data_path, args.data, args.B_path)
+            fake_B_path = os.path.join(args.data_path, args.data, args.fake_B_path)
+            fake_A_path = os.path.join(args.data_path, args.data, args.fake_A_path)
+
+            
+            if not os.path.exists(fake_B_path):
+                os.mkdir(fake_B_path)
+            if not os.path.exists(fake_A_path):
+                os.mkdir(fake_A_path)
+
+            # save_image(imageA, A_test_path + "/synt_{:06}".format(index)+args.test_image_type)
+            # save_image(imageB, B_test_path + "/real_{:06}".format(index)+args.test_image_type)
+            save_image(generated_img_B, fake_B_path + "/fake_{:06}".format(index)+args.test_image_type)
+            save_image(generated_img_A, fake_A_path + "/fake_{:06}".format(index)+args.test_image_type)
+
+
+
+
+
+
+
+
+
