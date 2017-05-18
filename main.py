@@ -46,8 +46,8 @@ parser.add_argument('--test_A', dest='test_A', default='testA', help='A test fol
 parser.add_argument('--test_B', dest='test_B', default='testB', help='B test folder name')
 parser.add_argument('--A_path', dest='A_path', default='res_A', help='test folder path name')
 parser.add_argument('--B_path', dest='B_path', default='res_B', help='test folder path name')
-parser.add_argument('--fake_A_path', dest='fake_A_path', default='res_fake_A', help='test folder path name')
-parser.add_argument('--fake_B_path', dest='fake_B_path', default='res_fake_B', help='test folder path name')
+parser.add_argument('--fake_A_path', dest='fake_A_path', default='fake_A', help='test folder path name')
+parser.add_argument('--fake_B_path', dest='fake_B_path', default='fake_B', help='test folder path name')
 parser.add_argument('--test_image_type', dest='test_image_type', default='.jpg', help='test image data type')
 
 args = parser.parse_args()

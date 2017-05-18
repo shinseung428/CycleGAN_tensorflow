@@ -395,8 +395,8 @@ class cycleGAN():
 
             # save_image(imageA, A_test_path + "/synt_{:06}".format(index)+args.test_image_type)
             # save_image(imageB, B_test_path + "/real_{:06}".format(index)+args.test_image_type)
-            save_image(generated_img_B, fake_B_path + "/fake_{:06}".format(index)+args.test_image_type)
-            save_image(generated_img_A, fake_A_path + "/fake_{:06}".format(index)+args.test_image_type)
+            save_image(generated_img_B, fake_B_path + "/fake_{:06}".format(index) + args.test_image_type)
+            save_image(generated_img_A, fake_A_path + "/fake_{:06}".format(index) + args.test_image_type)
 
 
 

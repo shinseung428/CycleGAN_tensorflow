@@ -6,9 +6,9 @@ Torch implementation can be found [here](https://github.com/junyanz/CycleGAN)
 PyTorch implementation can be found [here](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix)
 
 ### Prerequisites  
--Tensorflow  
--numpy  
--scipy  
+* Tensorflow  
+* numpy  
+* scipy  
 
 ## Downloading datasets  
 ```bash
@@ -28,18 +28,15 @@ Available datasets:
 ```bash
 python main.py --is_train=True --data=apple2orange
 ```
-
-Before training the model, check the folder path to make sure data are fetched correctly.  
+ 
 
 ## Testing
 ```bash
 python main.py --is_train=False --data=apple2orange
 ```
 
-Running this code generates images in 4 folders.  
+Running this code generates images in 2 folders.  
   
-__res_A__ folder contains original test images from domain A  
-__res_B__ folder contains original test images from domain B  
 __fake_A__ folder contains fake images generated from domain B  
 __fake_B__ folder contains fake images generated from domain A  
 
