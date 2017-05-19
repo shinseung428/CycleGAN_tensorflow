@@ -5,14 +5,17 @@ import scipy.misc
 import scipy.io as sio
 import scipy.ndimage
 
-def save_images(orig, refined, cycled, path):
+def save_images(orig, refined, cycled, path, is_gray):
 
     new_img = np.concatenate((orig,refined), axis=2)
     new_img = np.concatenate((new_img,cycled), axis=2)
     new_img = np.reshape(new_img, (new_img.shape[1], new_img.shape[2], new_img.shape[3]))
 
-    new_img_ = np.zeros((new_img.shape[0], new_img.shape[1], 3), dtype=np.float)
-    new_img_[:,:,0] = new_img_[:,:,1] = new_img_[:,:,2] = new_img[:,:,0]
+    if is_gray:
+        new_img_ = np.zeros((new_img.shape[0], new_img.shape[1], 3), dtype=np.float)
+        new_img_[:,:,0] = new_img_[:,:,1] = new_img_[:,:,2] = new_img[:,:,0]
+    else:
+        new_img_ = new_img
 
     scipy.misc.imsave(path , new_img_)
 

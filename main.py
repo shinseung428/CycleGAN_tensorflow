@@ -17,11 +17,11 @@ parser.add_argument('--batch_size', dest='batch_size', default=1, help='batch si
 parser.add_argument('--sample_size', dest='sample_size', default=64, help='sample size')
 parser.add_argument('--channel_dim', dest='channel_dim', default=3, help='channel dimension')
 
-parser.add_argument('--data_path', dest='data_path', default='./dataset', help='training datapath')
+parser.add_argument('--data_path', dest='data_path', default='./datasets', help='training datapath')
 parser.add_argument('--data', dest='data', default='apple2orange', help='data')
 parser.add_argument('--trainsetA', dest='trainsetA', default='trainA', help='A training folder name')
 parser.add_argument('--trainsetB', dest='trainsetB', default='trainB', help='B training folder name')
-parser.add_argument('--image_type', dest='image_type', default='*jpg', help='training image data type')
+parser.add_argument('--image_type', dest='image_type', default='*.jpg', help='training image data type')
 
 parser.add_argument('--logpoint', dest='logpoint', default=1000, help='steps to make save')
 parser.add_argument('--log_folder', dest='log_folder', default='./checkpoints', help='folder to make saves')
@@ -55,7 +55,7 @@ args = parser.parse_args()
 
 def main(_):
     run_config = tf.ConfigProto()
-    run_config.gpu_options.allow_growth = True
+    run_config.gpu_options.allow_growth = False
     print 'Starting CycleGAN'
     with tf.Session(config=run_config) as sess:
         

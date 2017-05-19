@@ -79,13 +79,13 @@ class cycleGAN():
         self.d_sum_y = tf.summary.histogram("d_y", self.D_y)
         self.d_sum_y_ = tf.summary.histogram("d_y_", self.D_y_)
 
-        self.images_x = tf.concat(0,[images_x, self.G_xy, self.G_xyx])
+        self.images_x = tf.concat([images_x, self.G_xy, self.G_xyx],0)
         self.images_x_sum =tf.summary.image("x", self.images_x, max_outputs=3)
 
         self.d_sum_x = tf.summary.histogram("d_x", self.D_x)
         self.d_sum_x_ = tf.summary.histogram("d_x_", self.D_x_)
 
-        self.images_y = tf.concat(0,[images_y, self.G_yx, self.G_yxy])
+        self.images_y = tf.concat([images_y, self.G_yx, self.G_yxy],0)
         self.images_y_sum = tf.summary.image("y", self.images_y, max_outputs=3)
  
         if self.debug:
@@ -107,6 +107,8 @@ class cycleGAN():
         for w in self.D_vars_y:
             print w
         # input("pause")
+
+
     def build_losses(self):
             def ones(layer):
                 return tf.ones_like(layer, dtype=tf.float32)
@@ -198,6 +200,11 @@ class cycleGAN():
         writer = tf.summary.FileWriter(self.graph_path, self.sess.graph)
         counter = 0
 
+        if not os.path.exists(self.model_path):
+            os.mkdir(self.model_path)
+        if not os.path.exists(self.images_path):
+            os.mkdir(self.images_path)
+            
         #Training starts
         for epoch in xrange(args.max_epochs):
             batch_indices = min(len(image_paths_A), np.inf) // self.batch_size
@@ -250,11 +257,11 @@ class cycleGAN():
                     saver.save(self.sess,self.model_path + 'model_{:06}'.format(counter))
                     generated_img = self.G_xy.eval({self.x_input:batchA})
                     cycled_img = self.G_xyx.eval({self.x_input:batchA})
-                    save_images(batchA, generated_img, cycled_img, self.images_path + 'model_{:06}'.format(counter) + ".jpg")
+                    save_images(batchA, generated_img, cycled_img, self.images_path + 'model_{:06}'.format(counter) + ".jpg",self.is_gray)
                     print ' Saved model'
 
                 counter += 1
-                input("pause")
+                
 
     def generator(self, images, reuse=False, name="generator"):
         with tf.variable_scope(name) as scope:

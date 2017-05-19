@@ -8,7 +8,7 @@ def instance_norm(input):
     epsilon = 1e-9
     mean, var = tf.nn.moments(input, [1, 2], keep_dims=True)
 
-    return tf.div(tf.sub(input, mean), tf.sqrt(tf.add(var, epsilon)))
+    return tf.div(tf.subtract(input, mean), tf.sqrt(tf.add(var, epsilon)))
 
 def resnet(x, filters, kernel, strides, name='resnet', b_name='b_name',reuse=False):
     with tf.variable_scope(name) as scope:
