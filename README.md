@@ -49,7 +49,16 @@ Default port set to 6006.
 This will enable you to visualize training details.  
 
 ## Results  
-Coming soon..
+
+From __'maps'__ dataset:  
+![maps_1](./checkpoints/images(maps)/model_15000)  
+![maps_2](./checkpoints/images(maps)/model_24000)  
+![maps_3](./checkpoints/images(maps)/model_37000)  
+
+From __'apple2orange'__ dataset:  
+![a2o_1](./checkpoints/images(apple2orange)/model_30000)  
+![a2o_2](./checkpoints/images(apple2orange)/model_31000)  
+![a2o_3](./checkpoints/images(apple2orange)/model_84000)  
 
 ## Author
 
