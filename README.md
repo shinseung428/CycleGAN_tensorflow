@@ -51,14 +51,14 @@ This will enable you to visualize training details.
 ## Results  
 
 From __'maps'__ dataset:  
-![maps_1](./checkpoints/images(maps)/model_15000)  
-![maps_2](./checkpoints/images(maps)/model_24000)  
-![maps_3](./checkpoints/images(maps)/model_37000)  
+![maps_1](./checkpoints/images(maps)/model_15000.jpg)  
+![maps_2](./checkpoints/images(maps)/model_24000.jpg)  
+![maps_3](./checkpoints/images(maps)/model_37000.jpg)  
 
 From __'apple2orange'__ dataset:  
-![a2o_1](./checkpoints/images(apple2orange)/model_30000)  
-![a2o_2](./checkpoints/images(apple2orange)/model_31000)  
-![a2o_3](./checkpoints/images(apple2orange)/model_84000)  
+![a2o_1](./checkpoints/images(apple2orange)/model_30000.jpg)  
+![a2o_2](./checkpoints/images(apple2orange)/model_31000.jpg)  
+![a2o_3](./checkpoints/images(apple2orange)/model_84000.jpg)  
 
 ## Author
 
