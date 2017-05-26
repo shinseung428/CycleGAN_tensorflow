@@ -57,7 +57,7 @@ Results from __'maps'__ dataset:
 ![maps_4](./checkpoints/images(maps)/model_037000.jpg)  
 
 Results from __'apple2orange'__ dataset:  
-![a2o_1](./checkpoints/images(apple2orange)/model_030000.jpg)  
+![a2o_1](./checkpoints/images(apple2orange)/model_030000.jpg)
 ![a2o_2](./checkpoints/images(apple2orange)/model_031000.jpg)  
 ![a2o_3](./checkpoints/images(apple2orange)/model_069000.jpg)
 ![a2o_4](./checkpoints/images(apple2orange)/model_084000.jpg)  
